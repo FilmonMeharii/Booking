@@ -1,56 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <title>Bokningar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ambassadbokning</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Alla bokningar</h1>
+  <h1>Boka ambassadtid</h1>
 
-  <!-- 📋 Formulär för ny bokning -->
-  <form id="booking-form">
+  <form id="bookingForm">
     <input type="text" id="name" placeholder="Namn" required />
     <input type="text" id="passportNumber" placeholder="Passnummer" required />
     <input type="date" id="appointmentDate" required />
     <button type="submit">Boka</button>
   </form>
 
-  <hr />
+  <p id="message"></p>
 
-  <!-- 📄 Lista med bokningar -->
-  <ul id="booking-list"></ul>
+  <h2>Alla bokningar</h2>
+  <ul id="bookingList"></ul>
 
   <script>
-    const form = document.getElementById("booking-form");
-    const list = document.getElementById("booking-list");
+    const form = document.getElementById("bookingForm");
+    const message = document.getElementById("message");
+    const list = document.getElementById("bookingList");
 
-    // 🚀 Funktion: Hämta alla bokningar
     async function loadBookings() {
-      const res = await fetch('/api/bookings');
+      const res = await fetch("/api/bookings");
       const data = await res.json();
+      list.innerHTML = "";
 
-      list.innerHTML = ""; // Rensa först
       data.forEach(booking => {
-        const item = document.createElement('li');
+        const item = document.createElement("li");
         item.textContent = `${booking.name} – ${booking.passportNumber} – ${new Date(booking.appointmentDate).toLocaleDateString()}`;
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.style.marginLeft = '10px';
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-btn";
         deleteBtn.onclick = async () => {
-          const confirmed = confirm('Vill du ta bort bokningen?');
+          const confirmed = confirm("Vill du ta bort bokningen?");
           if (!confirmed) return;
 
           const res = await fetch(`/api/bookings/${booking._id}`, {
-            method: 'DELETE'
+            method: "DELETE",
           });
 
           if (res.ok) {
-            loadBookings(); // Ladda om listan
+            message.textContent = "✅ Bokning borttagen!";
+            loadBookings();
           } else {
-            alert('Kunde inte radera bokningen');
+            message.textContent = "❌ Kunde inte ta bort bokning";
           }
         };
 
@@ -59,31 +59,41 @@
       });
     }
 
-    // 📨 När formuläret skickas
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      message.textContent = "";
 
-      const newBooking = {
-        name: document.getElementById("name").value,
-        passportNumber: document.getElementById("passportNumber").value,
-        appointmentDate: document.getElementById("appointmentDate").value,
-      };
+      const name = document.getElementById("name").value.trim();
+      const passportNumber = document.getElementById("passportNumber").value.trim();
+      const appointmentDate = document.getElementById("appointmentDate").value;
 
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newBooking)
+      // Enkel validering
+      if (!name || !passportNumber || !appointmentDate) {
+        return (message.textContent = "❗ Alla fält måste fyllas i");
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+      if (appointmentDate < today) {
+        return (message.textContent = "❗ Datumet kan inte vara i det förflutna");
+      }
+
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, passportNumber, appointmentDate }),
       });
 
       if (res.ok) {
+        message.textContent = "✅ Bokning skapad!";
         form.reset();
         loadBookings();
       } else {
-        alert("Något gick fel 😢");
+        message.textContent = "Delete";
       }
     });
 
-    // Ladda alla bokningar när sidan startar
     loadBookings();
   </script>
 </body>
