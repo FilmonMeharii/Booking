@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bokningar</title>
+</head>
+<body>
+  <h1>Alla bokningar</h1>
+
+  <!-- 📋 Formulär för ny bokning -->
+  <form id="booking-form">
+    <input type="text" id="name" placeholder="Namn" required />
+    <input type="text" id="passportNumber" placeholder="Passnummer" required />
+    <input type="date" id="appointmentDate" required />
+    <button type="submit">Boka</button>
+  </form>
+
+  <hr />
+
+  <!-- 📄 Lista med bokningar -->
+  <ul id="booking-list"></ul>
+
+  <script>
+    const form = document.getElementById("booking-form");
+    const list = document.getElementById("booking-list");
+
+    // 🚀 Funktion: Hämta alla bokningar
+    async function loadBookings() {
+      const res = await fetch('/api/bookings');
+      const data = await res.json();
+
+      list.innerHTML = ""; // Rensa först
+      data.forEach(booking => {
+        const item = document.createElement('li');
+        item.textContent = `${booking.name} – ${booking.passportNumber} – ${new Date(booking.appointmentDate).toLocaleDateString()}`;
+        list.appendChild(item);
+      });
+    }
+
+    // 📨 Formulär: Skicka ny bokning
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const newBooking = {
+        name: document.getElementById("name").value,
+        passportNumber: document.getElementById("passportNumber").value,
+        appointmentDate: document.getElementById("appointmentDate").value,
+      };
+
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBooking)
+      });
+
+      if (res.ok) {
+        form.reset(); // Töm formuläret
+        loadBookings(); // Ladda om listan
+      } else {
+        alert("Något gick fel 😢");
+      }
+    });
+
+    // Ladda bokningar vid start
+    loadBookings();
+  </script>
+</body>
+</html>
