@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Bokningar</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Alla bokningar</h1>
@@ -33,11 +34,32 @@
       data.forEach(booking => {
         const item = document.createElement('li');
         item.textContent = `${booking.name} – ${booking.passportNumber} – ${new Date(booking.appointmentDate).toLocaleDateString()}`;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.style.marginLeft = '10px';
+        deleteBtn.onclick = async () => {
+          const confirmed = confirm('Vill du ta bort bokningen?');
+          if (!confirmed) return;
+
+          const res = await fetch(`/api/bookings/${booking._id}`, {
+            method: 'DELETE'
+          });
+
+          if (res.ok) {
+            loadBookings(); // Ladda om listan
+          } else {
+            alert('Kunde inte radera bokningen');
+          }
+        };
+
+        item.appendChild(deleteBtn);
         list.appendChild(item);
       });
     }
 
-    // 📨 Formulär: Skicka ny bokning
+    // 📨 När formuläret skickas
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -54,14 +76,14 @@
       });
 
       if (res.ok) {
-        form.reset(); // Töm formuläret
-        loadBookings(); // Ladda om listan
+        form.reset();
+        loadBookings();
       } else {
         alert("Något gick fel 😢");
       }
     });
 
-    // Ladda bokningar vid start
+    // Ladda alla bokningar när sidan startar
     loadBookings();
   </script>
 </body>
