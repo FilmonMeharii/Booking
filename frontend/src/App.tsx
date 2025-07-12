@@ -6,23 +6,38 @@ import { BookingList } from './components/BookingList';
 import { Profile } from './components/Profile';
 import { Navigation } from './components/Navigation';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { Dashboard } from './components/Dashboard';
 import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Routes>
+        <div className="container">
+                  <Routes>
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/" element={<Navigate to="/bookings" />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <div>
+                  <Navigation />
+                  <Dashboard />
+                </div>
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/bookings" 
             element={
               <ProtectedRoute>
                 <div>
                   <Navigation />
-                  <BookingForm onBookingCreated={() => window.location.reload()} />
-                  <BookingList />
+                  <div style={{ padding: '2rem' }}>
+                    <BookingForm onBookingCreated={() => window.location.reload()} />
+                    <BookingList />
+                  </div>
                 </div>
               </ProtectedRoute>
             } 
@@ -33,12 +48,15 @@ function App() {
               <ProtectedRoute>
                 <div>
                   <Navigation />
-                  <Profile />
+                  <div style={{ padding: '2rem' }}>
+                    <Profile />
+                  </div>
                 </div>
               </ProtectedRoute>
             } 
           />
         </Routes>
+        </div>
       </div>
     </Router>
   );

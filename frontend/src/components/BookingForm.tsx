@@ -38,29 +38,48 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onBookingCreated }) =>
   };
 
   return (
-    <div>
-      <h1>Boka ambassadtid</h1>
+    <div className="card">
+      <h2>Boka ambassadtid</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Namn"
-          value={formData.name}
-          onChange={(e) => setFormData({...formData, name: e.target.value})}
-        />
-        <input
-          type="text"
-          placeholder="Passnummer"
-          value={formData.passportNumber}
-          onChange={(e) => setFormData({...formData, passportNumber: e.target.value})}
-        />
-        <input
-          type="date"
-          value={formData.appointmentDate}
-          onChange={(e) => setFormData({...formData, appointmentDate: e.target.value})}
-        />
-        <button type="submit">Boka</button>
+        <div className="form-group">
+          <label htmlFor="name">Namn</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="Ange fullständigt namn"
+            value={formData.name}
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="passport">Passnummer</label>
+          <input
+            id="passport"
+            type="text"
+            placeholder="Ange passnummer"
+            value={formData.passportNumber}
+            onChange={(e) => setFormData({...formData, passportNumber: e.target.value})}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="date">Datum för besök</label>
+          <input
+            id="date"
+            type="date"
+            value={formData.appointmentDate}
+            onChange={(e) => setFormData({...formData, appointmentDate: e.target.value})}
+            required
+          />
+        </div>
+        <button type="submit" className="btn-primary">Boka tid</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && (
+        <p className={`message ${message.includes('✅') ? 'success' : message.includes('❗') ? 'warning' : 'error'}`}>
+          {message}
+        </p>
+      )}
     </div>
   );
 };

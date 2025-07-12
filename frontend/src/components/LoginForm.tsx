@@ -32,24 +32,28 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h1>Logga in</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Användarnamn"
-          value={credentials.username}
-          onChange={(e) => setCredentials({...credentials, username: e.target.value})}
-        />
-        <input
-          type="password"
-          placeholder="Lösenord"
-          value={credentials.password}
-          onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-        />
-        <button type="submit">Logga in</button>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Användarnamn"
+            value={credentials.username}
+            onChange={(e) => setCredentials({...credentials, username: e.target.value})}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Lösenord"
+            value={credentials.password}
+            onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+          />
+        </div>
+        <button type="submit" className="btn-primary">Logga in</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="message error">{error}</p>}
     </div>
   );
 };
