@@ -1,10 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const cors = require("cors");
 const Admin = require("./models/Admin");
 require("dotenv").config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Import routes and middleware
@@ -23,17 +25,20 @@ app.get("/", (req, res) => {
 
 // ✅ Create admin if not exists
 async function skapaAdmin() {
-  const finns = await Admin.findOne({ username: "admin" });
-  if (!finns) {
-    const nyAdmin = new Admin({username: "admin",password: "admin123"});
-    await nyAdmin.save();
-    console.log("✅ Admin skapad: användarnamn = admin, lösenord = admin123");
-  } else {
-    console.log("🔑 Admin finns redan");
+  try {
+    const finns = await Admin.findOne({ username: "admin" });
+    if (!finns) {
+      const nyAdmin = new Admin({username: "admin",password: "admin123"});
+      await nyAdmin.save();
+      console.log("✅ Admin skapad: användarnamn = admin, lösenord = admin123");
+    } else {
+      console.log("🔑 Admin finns redan");
+    }
+  } catch (error) {
+    console.error("❌ Fel vid skapande av admin:", error);
   }
 }
 
-skapaAdmin();
 // ✅ Connect to MongoDB and create admin
 mongoose
   .connect(process.env.MONGO_URI)

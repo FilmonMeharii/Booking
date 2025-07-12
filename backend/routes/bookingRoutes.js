@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
-const verifyToken = require("../middleware/verifyToken"); // Skapa detta strax
+const verifyToken = require("../middleware/auth");
 
 
 
