@@ -16,4 +16,17 @@ router.post('/login', async (req, res) => {
     res.json({ token, admin: { id: admin._id, username: admin.username } });
 });
 
+router.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const newAdmin = new (require("../models/Admin"))({ username, password });
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin skapad!" });
+  } catch (err) {
+    res.status(500).json({ message: "Fel vid skapande", error: err });
+  }
+});
+
+
 module.exports = router;

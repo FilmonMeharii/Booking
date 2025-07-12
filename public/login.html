@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head><meta charset="UTF-8"><title>Login</title></head>
+<body>
+  <h1>Logga in</h1>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Användarnamn" required />
+    <input type="password" id="password" placeholder="Lösenord" required />
+    <button type="submit">Logga in</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/admin/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({username, password})
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          window.location.href = 'bookings.html'; // Gå till bokningar efter inlogg
+        } else {
+          alert(data.message || 'Fel vid inloggning');
+        }
+      } catch (err) {
+        alert('Något gick fel');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,12 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const Admin = require("./models/Admin");
 require("dotenv").config();
 
 const app = express();
 app.use(express.json());
-
-const path = require("path");
 
 // Import routes and middleware
 const adminRoutes = require("./routes/adminRoutes");

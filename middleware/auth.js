@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
-    if (!token) return res.status(403).json({ message: 'Ingen token tillhandahållen' });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).json({ message: 'Ingen token tillhandahållen' });
+
+    const token = authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Token saknas' });
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.adminId = decoded.id; // Save admin ID to request object
-        next(); // Call next middleware or route handler
+        req.user = decoded; // Attach decoded token (admin info)
+        next();
     } catch (error) {
         res.status(401).json({ message: 'Ogiltig token' });
     }

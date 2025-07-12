@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head><meta charset="UTF-8"><title>Profil</title></head>
+<body>
+  <nav>
+    <a href="bookings.html">Bokningar</a> |
+    <a href="profile.html">Profil</a> |
+    <a href="#" id="logoutBtn">Logga ut</a>
+  </nav>
+
+  <h1>Min profil</h1>
+  <p>Här kan du visa info om admin...</p>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html'; // Skicka till login om ej inloggad
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
