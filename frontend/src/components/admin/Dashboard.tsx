@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { bookingApi } from '../services/api';
-import { Booking } from '../types';
+import { bookingApi } from '../../services/api';
+import { Booking } from '../../types';
 
 export const Dashboard: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);

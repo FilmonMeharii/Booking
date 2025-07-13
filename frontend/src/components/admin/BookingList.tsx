@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { bookingApi } from '../services/api';
-import { Booking } from '../types';
-import { SearchFilter } from './SearchFilter';
+import { bookingApi } from '../../services/api';
+import { Booking } from '../../types';
+import { SearchFilter } from '../shared/SearchFilter';
 
 export const BookingList: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);

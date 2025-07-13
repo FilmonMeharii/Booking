@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { adminApi } from '../services/api';
-import { useAuth } from '../hooks/useAuth';
+import { adminApi } from '../../services/api';
+import { useAuth } from '../../hooks/useAuth';
 
 export const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });

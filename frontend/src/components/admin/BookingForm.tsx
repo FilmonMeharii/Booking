@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { bookingApi } from '../services/api';
+import { bookingApi } from '../../services/api';
 
 interface BookingFormProps {
   onBookingCreated: () => void;
